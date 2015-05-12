@@ -12,8 +12,17 @@ Installation
 ::
 
     pip install psutil
-    wget -O /usr/share/munin/plugins/uwsgi_  https://github.com/wikical/munin-uwsgi-stats/raw/master/uwsgi_
+    wget -O /usr/share/munin/plugins/uwsgi_  https://github.com/jarvinia/munin-uwsgi-stats/raw/master/uwsgi_
     chmod 755 /usr/share/munin/plugins/uwsgi_
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_listen_queue'
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_listen_queue_errors'
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_requests'
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_exceptions'
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_tx'
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_avg_rt'
+    ln -s '/usr/share/munin/plugins/uwsgi_' '/etc/munin/plugins/uwsgi_rss'
+    /etc/init.d/munin-node restart
+
 
 Configuration
 -------------
