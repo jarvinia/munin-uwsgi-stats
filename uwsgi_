@@ -3,7 +3,7 @@
 import os
 import sys
 import json
-import socket
+import requests
 import psutil
 from itertools import izip_longest
 
@@ -36,18 +36,10 @@ def config(apps):
 def get_data_from_uwsgi_stats_server(app):
     """Return a json object with stuff returned by the uwsgi stats server.
     """
-    s = socket.socket(app['socket_family'], socket.SOCK_STREAM)
-    s.settimeout(3)
-    s.connect(app['socket_address'])
-    js = ''
-    while True:
-        data = s.recv(4096)
-        if len(data) < 1:
-            break
-        js += data
-    s.close()
-    return json.loads(js or '{}')
-
+    port = app['port']
+    address = 'http://127.0.0.1:' + str(port) 
+    r = requests.get(address)
+    return r.json()
 
 def get_value_from_uwsgi_stats_server(app, mode):
     dd = get_data_from_uwsgi_stats_server(app)
@@ -101,15 +93,6 @@ names = os.environ.get('name', 'uwsgi').split()
 apps = [{'name': name} for name in names]
 for app, port in izip_longest(apps, ports, fillvalue=''):
     app['port'] = port
-    if port.isdigit():
-        app['socket_family'] = socket.AF_INET
-        app['socket_address'] = ('127.0.0.1', int(port))
-    elif port:
-        app['socket_family'] = socket.AF_UNIX
-        app['socket_address'] = port
-    else:
-        app['socket_family'] = None
-        app['socket_address'] = None
 
 name, p, mode = os.path.basename(__file__).partition('_')
 
